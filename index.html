@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terraria Banner Tracker</title>
+</head>
+<body>
+    <h1>Terraria Banner Tracker</h1>
+    <div>
+        <h2>Owned Banners</h2>
+        <ul id="owned-banners"></ul>
+    </div>
+    <div>
+        <h2>Progress</h2>
+        <p id="progress"></p>
+    </div>
+    <div>
+        <h2>Add a Banner</h2>
+        <input type="text" id="banner-id" placeholder="Banner ID" />
+        <button onclick="addBanner()">Add</button>
+    </div>
+
+    <script>
+        async function fetchOwnedBanners() {
+            const response = await fetch('/api/owned_banners');
+            const data = await response.json();
+            document.getElementById('owned-banners').innerHTML = data.owned
+                .map(banner => `<li>${banner}</li>`)
+                .join('');
+        }
+
+        async function fetchProgress() {
+            const response = await fetch('/api/progress');
+            const data = await response.json();
+            document.getElementById('progress').innerText = `${data.owned}/${data.total}`;
+        }
+
+        async function addBanner() {
+            const bannerId = document.getElementById('banner-id').value;
+            const response = await fetch('/api/owned_banners', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: bannerId }),
+            });
+            if (response.ok) {
+                alert('Banner added!');
+                fetchOwnedBanners();
+                fetchProgress();
+            } else {
+                alert('Failed to add banner!');
+            }
+        }
+
+        fetchOwnedBanners();
+        fetchProgress();
+    </script>
+</body>
+</html>
