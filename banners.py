@@ -92,6 +92,23 @@ class Banners:
                 return False #Banner already exists
         return False #Invalid banner ID
     
+    def delete_owned_banner(self, banner_id):
+        if not self.all_banners:
+            self.update_banners()
+        valid_banner = self.check_valid_banner(banner_id)
+        if valid_banner:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            try:
+                cursor.execute('''DELETE FROM owned_banners WHERE id = ?''', (banner_id,))
+                conn.commit()
+                conn.close()
+                return True
+            except sqlite3.IntegrityError:
+                conn.close()
+                return False #Banner doesn't exist         
+        return False # Invalid Banner ID
+    
     def get_progress(self):
         total = len(self.all_banners)
         owned = len(self.get_owned_banners())
@@ -102,4 +119,5 @@ class Banners:
             
 if __name__ == '__main__':
     banners = Banners()
+    banners.delete_owned_banner(2928)
     print(banners.get_owned_banners())
