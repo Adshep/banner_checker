@@ -31,6 +31,17 @@ def add_owned_banner():
     else:
         return jsonify({'error': 'Invalid or duplicate banner ID'}), 400
     
+@app.route('/api/owned_banners', methods = ['DELETE'])
+def delete_owned_banner():
+    banner_id = request.json.get('id')
+    if not banner_id:
+        return jsonify({'error': 'Missing "id" field'}), 400
+    if banners.delete_owned_banner(banner_id):
+        return jsonify({'message': 'Banner succesfully deleted'})
+    else:
+        return jsonify({'error': 'Banner not found or invalid ID'}), 400
+    
+    
 @app.route('/api/progress', methods = ['GET'])
 def get_progress():
     return jsonify(banners.get_progress())

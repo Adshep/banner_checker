@@ -93,3 +93,32 @@ button:hover {
 #suggestions li:hover {
     background-color: #f0f0f0;
 }
+
+/* Style the list items */
+#owned-list li {
+    display: flex;
+    justify-content: space-between; /* Space text and bin icon apart */
+    align-items: center;
+    padding: 8px 12px;
+    position: relative;
+}
+
+/* Hide the bin icon by default */
+.delete-bin {
+    opacity: 0;
+    cursor: pointer;
+    color: gray;
+    transition: opacity 0.3s, color 0.3s;
+}
+
+/* Show the bin icon when hovering over the list item */
+#owned-list li:hover .delete-bin {
+    opacity: 1;
+    color: red; /* Highlight red when visible */
+}
+
+/* Add an extra hover effect for the bin itself */
+.delete-bin:hover {
+    transform: scale(1.2); /* Slightly enlarge the icon */
+    color: darkred;
+}

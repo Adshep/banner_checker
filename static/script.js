@@ -61,9 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     addStatus.style.color = "green";
                     addStatus.textContent = data.message;
                     bannerInput.value = "";
-                    selectedBannerId = null; // Reset the selected ID
-                    loadOwnedBanners(); // Refresh the owned banners
-                    loadProgress(); // Refresh the progress
+                    selectedBannerId = null;
+                    loadOwnedBanners(); //Refresh the owned banners
+                    loadProgress(); //Refresh the progress
                 } else {
                     addStatus.style.color = "red";
                     addStatus.textContent = data.error;
@@ -71,8 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 
-    // Fetch and display progress
-    function loadProgress() {
+    function loadProgress() { //Load banner progress
         fetch('/api/progress')
             .then(response => response.json())
             .then(data => {
@@ -84,22 +83,50 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // Fetch and display owned banners
-    function loadOwnedBanners() {
+    function loadOwnedBanners() { //Load the list of owned banners
         fetch('/api/owned_banners')
             .then(response => response.json())
             .then(data => {
-                const banners = data.banners || [];
-                ownedList.innerHTML = banners.map(banner => `
-                    <li>${banner.name} (ID: ${banner.id})</li>
-                `).join('');
-            })
-            .catch(err => {
-                ownedList.innerHTML = "<li>Error loading owned banners</li>";
-                console.error(err);
+                const ownedList = document.getElementById("owned-list");
+                ownedList.innerHTML = ''; // Clear the list first
+
+                data.banners.forEach(banner => {
+                    const listItem = document.createElement("li");
+                    listItem.dataset.id = banner.id;
+                    listItem.innerHTML = `
+                        ${banner.name}
+                        <span class="delete-bin" title="Delete">🗑️</span>
+                    `;
+
+                    // Attach delete functionality to the bin icon
+                    listItem.querySelector('.delete-bin').addEventListener('click', () => {
+                        deleteOwnedBanner(banner.id);
+                    });
+
+                    ownedList.appendChild(listItem);
+                });
             });
     }
 
+    // Function to delete an owned banner
+    function deleteOwnedBanner(bannerId) {
+        fetch(`/api/owned_banners`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: bannerId }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    loadOwnedBanners(); // Reload the owned banners
+                    loadProgress(); // Update progress
+                } else {
+                    alert(data.error || 'Failed to delete the banner.');
+                }
+            });
+    }
     // Initial load
     loadProgress();
     loadOwnedBanners();
