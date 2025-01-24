@@ -35,5 +35,18 @@ def add_owned_banner():
 def get_progress():
     return jsonify(banners.get_progress())
 
+@app.route('/api/search_banners', methods=['GET'])
+def search_banners():
+    query = request.args.get('query', '').lower()
+    if not query:
+        return jsonify([])
+    
+    results = []
+    for banner in banners.all_banners:
+        if query in banner['name'].lower() or query in banner['id']:
+            results.append({'id': banner['id'], 'name': banner['name']})
+
+    return jsonify(results)
+
 if __name__ == '__main__':
     app.run(debug=True)

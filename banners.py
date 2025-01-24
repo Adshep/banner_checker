@@ -103,8 +103,3 @@ class Banners:
 if __name__ == '__main__':
     banners = Banners()
     print(banners.get_owned_banners())
-
-
-
-
-

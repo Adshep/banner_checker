@@ -9,16 +9,12 @@
 <body>
     <header>
         <h1>Terraria Banner Tracker</h1>
-        <p>Track and manage your Terraria banners!</p>
+        <p>This tool allows you to track banners you have collected in your Terraria playthrough</p>
     </header>
     <main>
         <section id="progress">
             <h2>Progress</h2>
             <p id="progress-text">Loading...</p>
-        </section>
-        <section id="all-banners">
-            <h2>All Banners</h2>
-            <ul id="banner-list"></ul>
         </section>
         <section id="owned-banners">
             <h2>Owned Banners</h2>
@@ -26,7 +22,10 @@
         </section>
         <section id="add-banner">
             <h2>Add a Banner</h2>
-            <input type="text" id="banner-id" placeholder="Enter Banner ID or name" />
+            <div id="autocomplete">
+                <input type="text" id="banner-input" placeholder="Enter Banner ID or Name" />
+                <ul id="suggestions"></ul>
+            </div>
             <button id="add-banner-btn">Add Banner</button>
             <p id="add-status"></p>
         </section>
