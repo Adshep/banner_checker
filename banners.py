@@ -95,7 +95,10 @@ class Banners:
     def get_progress(self):
         total = len(self.all_banners)
         owned = len(self.get_owned_banners())
-        return {"progress": f"{owned}/{total}"}
+        if owned != 0:
+            return {"progress": f"{owned}/{total}"}
+        else:
+            return {"progress": f"0/{total}"}
             
 if __name__ == '__main__':
     banners = Banners()
